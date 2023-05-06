@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const menu = require('../services/menu');
+const jwtservice = require('../middleware/jwt');
 
 // Insert a new menu item
-router.post('/menu', async (req, res) => {
+router.post('/menu',jwtservice.authenticateToken, async (req, res) => {
   try {
     const result = await menu.insertMenu(req.body);
     res.send(result);
@@ -14,7 +15,7 @@ router.post('/menu', async (req, res) => {
 });
 
 // Get all menu items
-router.get('/menu', async (req, res) => {
+router.get('/menu',jwtservice.authenticateToken, async (req, res) => {
   try {
     const result = await menu.findAllMenus();
     res.send(result);
@@ -25,7 +26,7 @@ router.get('/menu', async (req, res) => {
 });
 
 // Get all menu items by restaurant ID
-router.get('/menu/:restaurantId', async (req, res) => {
+router.get('/menu/:restaurantId',jwtservice.authenticateToken, async (req, res) => {
   try {
     const result = await menu.findMenusByRestaurantId(req.params.restaurantId);
     res.send(result);
@@ -36,7 +37,7 @@ router.get('/menu/:restaurantId', async (req, res) => {
 });
 
 // Delete a menu item
-router.delete('/menu/:menuId', async (req, res) => {
+router.delete('/menu/:menuId',jwtservice.authenticateToken, async (req, res) => {
   try {
     const result = await menu.deleteMenu(req.params.menuId);
     res.send(result);
@@ -47,7 +48,7 @@ router.delete('/menu/:menuId', async (req, res) => {
 });
 
 // Update a menu item
-router.put('/menu/:menuId', async (req, res) => {
+router.put('/menu/:menuId',jwtservice.authenticateToken, async (req, res) => {
   try {
     const result = await menu.updateMenu(req.params.menuId, req.body);
     res.send(result);
@@ -58,7 +59,7 @@ router.put('/menu/:menuId', async (req, res) => {
 });
 
 // Get a menu item by ID
-router.get('/menu-item/:menuItemId', async (req, res) => {
+router.get('/menu-item/:menuItemId',jwtservice.authenticateToken, async (req, res) => {
   try {
     const result = await menu.findMenuItemById(req.params.menuItemId);
     res.send(result);

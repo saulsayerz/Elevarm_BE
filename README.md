@@ -3,6 +3,7 @@ Elevarm BE
 ## Tech Stack :
 - Node Express.js
 - MongoDB Atlas
+- jwt for auth 
 
 ## HOW TO USE
 - Git clone this repository

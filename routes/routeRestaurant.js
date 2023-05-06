@@ -6,9 +6,10 @@ const {
   deleteRestaurant,
   updateRestaurant
 } = require('../services/restaurant');
+const jwtservice = require('../middleware/jwt');
 
 // Create a new restaurant
-router.post('/', async (req, res) => {
+router.post('/',jwtservice.authenticateToken, async (req, res) => {
   try {
     const result = await insertRestaurant(req.body);
     res.json(result);
@@ -19,7 +20,7 @@ router.post('/', async (req, res) => {
 });
 
 // Get all restaurants
-router.get('/', async (req, res) => {
+router.get('/',jwtservice.authenticateToken, async (req, res) => {
   try {
     const result = await findAllRestaurants();
     res.json(result);
@@ -30,7 +31,7 @@ router.get('/', async (req, res) => {
 });
 
 // Delete a restaurant and its menu items
-router.delete('/:restaurantId', async (req, res) => {
+router.delete('/:restaurantId',jwtservice.authenticateToken, async (req, res) => {
   try {
     const result = await deleteRestaurant(req.params.restaurantId);
     res.json(result);
@@ -41,7 +42,7 @@ router.delete('/:restaurantId', async (req, res) => {
 });
 
 // Update a restaurant
-router.put('/:restaurantId', async (req, res) => {
+router.put('/:restaurantId',jwtservice.authenticateToken, async (req, res) => {
   try {
     const result = await updateRestaurant(req.params.restaurantId, req.body);
     res.json(result);

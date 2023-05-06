@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const jwtservice = require('../middleware/jwt');
 const { insertTransaction, findAllTransactions, deleteTransaction, updateTransaction } = require('../services/transaction');
 
-router.post('/transactions', async (req, res) => {
+router.post('/transactions',jwtservice.authenticateToken, async (req, res) => {
   try {
     const result = await insertTransaction(req.body);
     res.status(201).json(result);
@@ -12,7 +13,7 @@ router.post('/transactions', async (req, res) => {
   }
 });
 
-router.get('/transactions', async (req, res) => {
+router.get('/transactions',jwtservice.authenticateToken, async (req, res) => {
   try {
     const result = await findAllTransactions();
     res.json(result);
@@ -22,7 +23,7 @@ router.get('/transactions', async (req, res) => {
   }
 });
 
-router.delete('/transactions/:id', async (req, res) => {
+router.delete('/transactions/:id',jwtservice.authenticateToken, async (req, res) => {
   try {
     const result = await deleteTransaction(req.params.id);
     res.json(result);
@@ -32,7 +33,7 @@ router.delete('/transactions/:id', async (req, res) => {
   }
 });
 
-router.put('/transactions/:id', async (req, res) => {
+router.put('/transactions/:id',jwtservice.authenticateToken, async (req, res) => {
   try {
     const result = await updateTransaction(req.params.id, req.body);
     res.json(result);
