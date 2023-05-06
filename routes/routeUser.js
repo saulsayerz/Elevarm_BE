@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userService = require('../services/user');
+const jwtservice = require('../middleware/jwt');
 
 router.post('/', async (req, res) => {
   try {
@@ -115,7 +116,7 @@ router.post('/register', async (req, res) => {
 
     const result = await userService.insertUser({ id, name, password, username, email });
     const token = await jwtservice.generateAccessToken({ user_id: id, username: username}, 1800);
-    res.status(200).json({ status: 'success', message: 'User registered successfully', data: token });
+    res.status(200).json({ status: 'success', message: 'User registered successfully', data: token, username: user.username });
   } catch (error) {
     res.status(500).json({ status: 'error', message: 'Failed to create user', error });
   }
@@ -125,7 +126,7 @@ router.post('/login', async (req, res) => {
   const user = await userService.loginUser(req.body);
   if (user) {
     const token = await jwtservice.generateAccessToken({ user_id: user.id, username: user.username}, 1800);
-    res.json({ status: 'success', message: 'User logged in successfully', data: token });
+    res.json({ status: 'success', message: 'User logged in successfully', data: token, username: user.username });
   } else {
     res.status(401).json({ status: 'error', message: 'Invalid username or password' });
   }

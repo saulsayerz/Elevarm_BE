@@ -4,7 +4,6 @@ const uri = "mongodb+srv://test:saul@cluster0.sbzqnvj.mongodb.net/?retryWrites=t
 const client = new MongoClient(uri, { useUnifiedTopology: true });
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const jwtservice = require('../middleware/jwt');
 
 async function insertUser(user) {
   try {
@@ -12,11 +11,11 @@ async function insertUser(user) {
     const database = client.db("elevarm");
     const collection = database.collection("user");
     const result = await collection.insertOne({
-      id: user.id,
       name: user.name,
       password: user.password,
       username: user.username,
       email: user.email,
+      account_type: user.account_type,
       // additional properties here
     });
     return result;
@@ -86,6 +85,7 @@ async function registerUser(user) {
       username: user.username,
       email: user.email,
       password: hashedPassword,
+      account_type: user.account_type,
       // Add any additional fields as needed
     };
     const result = await collection.insertOne(newUser);
