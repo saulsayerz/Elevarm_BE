@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 
 const uri = "mongodb+srv://test:saul@cluster0.sbzqnvj.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useUnifiedTopology: true });
@@ -10,9 +10,10 @@ async function insertUser(user) {
     await client.connect();
     const database = client.db("elevarm");
     const collection = database.collection("user");
+    const hashedPassword = await bcrypt.hash(user.password, saltRounds);
     const result = await collection.insertOne({
       name: user.name,
-      password: user.password,
+      password: user.hashedPassword,
       username: user.username,
       email: user.email,
       account_type: user.account_type,
@@ -41,7 +42,8 @@ async function deleteUser(userId) {
     await client.connect();
     const database = client.db("elevarm");
     const collection = database.collection("user");
-    const result = await collection.deleteOne({ _id: ObjectId(userId) });
+    const _id= new ObjectId(userId)
+    const result = await collection.deleteOne({ _id });
     return result;
   } finally {
     await client.close();
@@ -85,9 +87,10 @@ async function registerUser(user) {
       username: user.username,
       email: user.email,
       password: hashedPassword,
-      account_type: user.account_type,
+      account_type: "User",
       // Add any additional fields as needed
     };
+    console.log(newUser);
     const result = await collection.insertOne(newUser);
     return result;
   } finally {
@@ -97,11 +100,13 @@ async function registerUser(user) {
 
 async function loginUser(user) {
   try {
+    console.log(user);
     await client.connect();
     const database = client.db("elevarm");
     const collection = database.collection("user");
     const result = await collection.findOne({ username: user.username });
     // Compare the hashed password in the database with the user's input
+    console.log(result)
     if (result && await bcrypt.compare(user.password, result.password)) {
       return result;
     } else {

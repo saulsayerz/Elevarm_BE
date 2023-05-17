@@ -1,6 +1,9 @@
 const express = require('express');
 const db = require('./services/db');
 const routeUser = require("./routes/routeUser");
+const routeRestaurant = require("./routes/routeRestaurant");
+const routeTransactions = require("./routes/routeTransactions");
+const routeMenu = require("./routes/routeMenu");
 
 const app = express();
 var cors = require('cors')
@@ -15,6 +18,9 @@ app.use(
 );
 
 app.use("/user", routeUser);
+app.use("/restaurant", routeRestaurant);
+app.use("/transaction", routeTransactions);
+app.use("/menu", routeMenu);
 
 app.get("/", (req, res) => {
   res.json({ message: "ok" });

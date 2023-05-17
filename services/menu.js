@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-
+const { MongoClient } = require('mongodb');
 const uri = "mongodb+srv://test:saul@cluster0.sbzqnvj.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useUnifiedTopology: true });
 
@@ -8,6 +8,7 @@ async function insertMenu(menu) {
     await client.connect();
     const database = client.db("elevarm");
     const collection = database.collection("menu");
+    console.log(menu)
     const result = await collection.insertOne({
       itemName: menu.itemName,
       restaurantId: menu.restaurantId,
@@ -36,7 +37,9 @@ async function findMenusByRestaurantId(restaurantId) {
     await client.connect();
     const database = client.db("elevarm");
     const collection = database.collection("menu");
-    const result = await collection.find({ restaurantId: ObjectId(restaurantId) }).toArray();
+    const restaurantId_obj = new ObjectId(restaurantId)
+    console.log(restaurantId)
+    const result = await collection.find({ restaurantId: restaurantId_obj }).toArray();
     return result;
   } finally {
     await client.close();

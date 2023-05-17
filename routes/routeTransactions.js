@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwtservice = require('../middleware/jwt');
-const { insertTransaction, findAllTransactions, deleteTransaction, updateTransaction } = require('../services/transaction');
+const { insertTransaction, findAllTransactions, deleteTransaction, updateTransaction } = require('../services/transactions');
 
 router.post('/transactions',jwtservice.authenticateToken, async (req, res) => {
   try {

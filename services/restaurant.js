@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-
+const { MongoClient } = require('mongodb');
 const uri = "mongodb+srv://test:saul@cluster0.sbzqnvj.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useUnifiedTopology: true });
 

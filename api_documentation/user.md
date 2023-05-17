@@ -3,14 +3,13 @@ This document provides a brief overview of the user service API and its routes.
 
 The User Service provides basic CRUD (Create, Read, Update, Delete) operations for users in an Elevarm database.
 
-# POST /users
+# POST /user
 Create a new user.
 
 Request Body
 json
 ```
 {
-  "id": "<string>",
   "name": "<string>",
   "password": "<string>",
   "username": "<string>",

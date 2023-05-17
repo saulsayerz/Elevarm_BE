@@ -5,11 +5,7 @@ const jwtservice = require('../middleware/jwt');
 
 router.post('/', async (req, res) => {
   try {
-    const { id, name, password, username, email } = req.body;
-    if (!id) {
-      res.status(400).json({ status: 'error', message: 'Missing id' });
-      return;
-    }
+    const { name, password, username, email } = req.body;
     if (!name) {
       res.status(400).json({ status: 'error', message: 'Missing name' });
       return;
@@ -27,7 +23,7 @@ router.post('/', async (req, res) => {
       return;
     }
 
-    const result = await userService.insertUser({ id, name, password, username, email });
+    const result = await userService.insertUser({ name, password, username, email });
     res.status(200).json({ status: 'success', message: 'User created successfully', data: result });
   } catch (error) {
     res.status(500).json({ status: 'error', message: 'Failed to create user', error });
@@ -48,6 +44,7 @@ router.delete('/:id', async (req, res) => {
     const result = await userService.deleteUser(req.params.id);
     res.status(200).json({ status: 'success', message: 'User deleted successfully', data: result });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ status: 'error', message: 'Failed to delete user', error });
   }
 });
@@ -92,11 +89,7 @@ router.get('/:id', async (req, res) => {
 
 router.post('/register', async (req, res) => {
   try {
-    const { id, name, password, username, email } = req.body;
-    if (!id) {
-      res.status(400).json({ status: 'error', message: 'Missing id' });
-      return;
-    }
+    const { name, password, username, email } = req.body;
     if (!name) {
       res.status(400).json({ status: 'error', message: 'Missing name' });
       return;
@@ -114,10 +107,11 @@ router.post('/register', async (req, res) => {
       return;
     }
 
-    const result = await userService.insertUser({ id, name, password, username, email });
-    const token = await jwtservice.generateAccessToken({ user_id: id, username: username}, 1800);
-    res.status(200).json({ status: 'success', message: 'User registered successfully', data: token, username: user.username });
+    const result = await userService.registerUser({ name, password, username, email });
+    const token = await jwtservice.generateAccessToken({ username: username}, 1800);
+    res.status(200).json({ status: 'success', message: 'User registered successfully', data: token, username: username });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ status: 'error', message: 'Failed to create user', error });
   }
 });
